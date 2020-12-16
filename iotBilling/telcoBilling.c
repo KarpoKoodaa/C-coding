@@ -4,16 +4,19 @@
 #include <time.h>
 
 struct Device {
-//	int id;
-	char firstname[20];
-	char lastname[30];
-//	char address[50];
-//	int zipCode;
-//	char city[20];
+	char serialNumber[20];
+	char model[100];
+	char manufacturer[100];
+	char deviceClass[100];
+	char description[100];
+	char firmwareVersion[100];
+	char hwVersion[100];
+	char location[100];
 	};
+
 int printMenu()
 {
-	int choose; 
+	int choose=0; 
 	system("clear");
 	printf("\t\t********** IOT BILLING SYSTEM ***********\n\n");
 	printf("\t\t\t 1. Add new device\n");
@@ -30,30 +33,30 @@ int printMenu()
 
 }
 
-void addCustomer() {
+void addDevice() {
 
 	int n;
 	int i;
-	struct Customer *ptr;
+	struct Device *ptr;
 	FILE *fp;
 	char *filename = "user_data.txt";
 
 
-	printf("\nEnter number of customer: \n");
+	printf("\nEnter number of devices: \n");
 	scanf("%d", &n);
-	ptr = (struct Customer*) malloc(n*sizeof(struct Customer));
+	ptr = (struct Device*) malloc(n*sizeof(struct Device));
 
 	for (i = 0; i < n; i++) {
-		printf("First and Lastname:\n");
-		scanf("%s %s", (ptr+i)->firstname, (ptr+i)->lastname); 
+		printf("Id and model:\n");
+		scanf("%s %s", (ptr+i)->serialNumber, (ptr+i)->model); 
 
 	}
 	fp = fopen(filename,"a");
 	printf("\n\t Adding \n");
 	for (i=0; i<n;i++){
 	
-		printf("Name: %s %s \n", (ptr+i)->firstname, (ptr+i)->lastname);
-		fprintf(fp,"%s %s\n", (ptr+i)->firstname, (ptr+i)->lastname);
+		printf("Name: %s %s \n", (ptr+i)->serialNumber, (ptr+i)->model);
+		fprintf(fp,"%s %s\n", (ptr+i)->serialNumber, (ptr+i)->model);
 	}
 	fclose(fp);
 
@@ -66,18 +69,23 @@ void search() {
 
 	int n;
 	int choosing;
-	struct Customer *ptr;
+	struct Device *ptr;
 
 	printf("\nPrint Customer\n");
 	printf("Customer number: \n");
 	scanf("%d", &choosing);
-	printf("\n Name: %s %s\n", (ptr+choosing)->firstname, (ptr+choosing)->lastname);
+	printf("\n Name: %s %s\n", (ptr+choosing)->serialNumber, (ptr+choosing)->model);
 	getchar();
 	getchar();
 }
 
-void deleteUser() {
+void removeDevice() {
 	printf("\nDELETE\n");
+	getchar();
+	getchar();
+}
+void createBillingRules() {
+	printf("\nRULES\n");
 	getchar();
 	getchar();
 }
@@ -93,23 +101,28 @@ int main ()
 		switch(option)
 		{
 			case 1:
-				addCustomer();
+				addDevice();
 				break;
 			case 2:
 				search();
 				break;
 			case 3:
-				deleteUser();
+				removeDevice();
 				break;
 			case 4:
+				createBillingRules();
+				break;
+			case 5:
 				printf("\nBye Bye\n");
 				break;
 			default:
 				printf("\t\t\tBad choice\n");
+				//printMenu();
 				break;
 		}
 
 		printf("\nreturned: %d\n", option);
+		//option = 1;
 	}
 	return 0;
 
