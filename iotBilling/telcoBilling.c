@@ -16,7 +16,8 @@ struct Device {
 
 int printMenu()
 {
-	int choose=0; 
+	int choose=0;
+	int value;
 	system("clear");
 	printf("\t\t********** IOT BILLING SYSTEM ***********\n\n");
 	printf("\t\t\t 1. Add new device\n");
@@ -25,10 +26,10 @@ int printMenu()
 	printf("\t\t\t 4. Create billing rules\n");
 	printf("\t\t\t 5. Quit\n");
 	printf("\t\t\t Choose: \n");
-	scanf("%d", &choose);
-
-	
-	return choose;
+	choose = getchar();
+	value = putchar(choose);
+	while((choose=getchar()) != EOF && choose != '\n');	
+	return value;
 
 
 }
@@ -95,24 +96,24 @@ int main ()
 {
 	int option;
 	
-	while (option != 5){
+	while (option != '5'){
 
 		option = printMenu();
 		switch(option)
 		{
-			case 1:
+			case '1':
 				addDevice();
 				break;
-			case 2:
+			case '2':
 				search();
 				break;
-			case 3:
+			case '3':
 				removeDevice();
 				break;
-			case 4:
+			case '4':
 				createBillingRules();
 				break;
-			case 5:
+			case '5':
 				printf("\nBye Bye\n");
 				break;
 			default:
@@ -121,8 +122,6 @@ int main ()
 				break;
 		}
 
-		printf("\nreturned: %d\n", option);
-		//option = 1;
 	}
 	return 0;
 
