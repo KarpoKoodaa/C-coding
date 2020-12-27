@@ -48,7 +48,7 @@ void addDevice() {
 	ptr = (struct Device*) malloc(n*sizeof(struct Device));
 
 	for (i = 0; i < n; i++) {
-		printf("Id and model:\n");
+		printf("Id and model (%d/%d):\n", i+1, n);
 		scanf("%s %s", (ptr+i)->serialNumber, (ptr+i)->model); 
 
 	}
