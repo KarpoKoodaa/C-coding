@@ -21,7 +21,7 @@ int printMenu()
 	system("clear");
 	printf("\t\t********** IOT BILLING SYSTEM ***********\n\n");
 	printf("\t\t\t 1. Add new device\n");
-	printf("\t\t\t 2. Search\n");
+	printf("\t\t\t 2. Search or list\n");
 	printf("\t\t\t 3. Remove a device\n");
 	printf("\t\t\t 4. Create billing rules\n");
 	printf("\t\t\t 5. Quit\n");
@@ -60,7 +60,7 @@ void addDevice() {
 		fprintf(fp,"%s %s\n", (ptr+i)->serialNumber, (ptr+i)->model);
 	}
 	fclose(fp);
-
+	printf("Press any key to continue");
 	getchar();
 	getchar();
 
@@ -68,14 +68,32 @@ void addDevice() {
 
 void search() {
 
+	FILE *fp;
+	char *filename = "user_data.txt"; //Create a GLOBAL variable
+	int size;
+	int i;
 	int n;
-	int choosing;
 	struct Device *ptr;
 
-	printf("\nPrint Customer\n");
-	printf("Customer number: \n");
-	scanf("%d", &choosing);
-	printf("\n Name: %s %s\n", (ptr+choosing)->serialNumber, (ptr+choosing)->model);
+	ptr = (struct Device*) malloc(n*sizeof(struct Device));
+
+	if ((fp = fopen (filename, "r")) == NULL){
+		printf("File not found");
+		
+	}else {
+		fscanf(fp, "%d", &size);
+		for (i=0; i < size; i++){
+			fscanf(fp, "%s%s", (ptr+i)->serialNumber, (ptr+i)->model);
+		}
+		fclose(fp);
+		printf("\nSerial Number \t Model\n");
+		for(i=0; i < size; i++){
+			printf("%s \t\t %s\n", (ptr+i)->serialNumber, (ptr+i)->model);
+		}
+	}
+	
+
+	printf("Press any key to continue");
 	getchar();
 	getchar();
 }
@@ -96,8 +114,8 @@ int main ()
 {
 	int option;
 	
-	while (option != '5'){
-
+	do
+	{
 		option = printMenu();
 		switch(option)
 		{
@@ -115,14 +133,15 @@ int main ()
 				break;
 			case '5':
 				printf("\nBye Bye\n");
+				system("clear");
 				break;
 			default:
 				printf("\t\t\tBad choice\n");
 				//printMenu();
 				break;
 		}
-
-	}
+	} while (option != '5');
+	
 	return 0;
 
 
