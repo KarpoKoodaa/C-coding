@@ -69,7 +69,7 @@ void addDevice() {
 void search() {
 
 	FILE *fp;
-	char *filename = "user_data.txt"; //Create a GLOBAL variable
+	char *filename = "user_data.txt"; //Create a GLOBAL variable!
 	int size;
 	int i;
 	int n;
