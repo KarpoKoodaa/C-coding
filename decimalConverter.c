@@ -1,4 +1,20 @@
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
+#include <stdlib.h>
+
+void die(const char *message)
+{
+	if(errno)
+	{
+		perror(message);
+	}
+	else
+	{
+		printf("ERROR: %s\n", message);
+	}
+	exit(1);
+}
 
 void toBinary(int dec)
 {
@@ -76,38 +92,26 @@ void toHex(int dec)
 }
 
 
-int main () 
+int main (int argc, char *argv[]) 
 {
-	int decimal=174;
-	int hex=35631;
-	char choose;
-	
-	printf("Give a decimal number: \n");
-	scanf("%d", &decimal);
-	getchar();	
-	printf("Convert to (H)ex or (B)inary: \n");
-	scanf("%c", &choose);
+	if(argc < 2) die("USAGE: decimalConverter <(H)ex or (B)in> <Decimal>");
+
+	int decimal = atoi(argv[2]);
+	char choose = argv[1][0];
 	
 	switch(choose)
 	{
 		case 'b':
-			toBinary(decimal);
-			break;
 		case 'B':
 			toBinary(decimal);
 			break;
 		case 'h':
-			toHex(decimal);
-			break;
 		case 'H':
 			toHex(decimal);
 			break;
 		default:
-			printf("Invalid selection\n");
-			break;
+			die("Invalid action. Only H=Hex and B=Binary\n");
 	}
-	//toBinary(decimal);
-	//toHex(hex);
 
 	return 0;
 }
