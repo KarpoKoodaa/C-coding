@@ -2,6 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <errno.h>
+
+#define MAX_ROWS 100
 
 struct Device {
 	char serialNumber[20];
@@ -12,7 +15,73 @@ struct Device {
 	char firmwareVersion[100];
 	char hwVersion[100];
 	char location[100];
-	};
+};
+
+struct Database
+{
+	struct Device rows[MAX_ROWS];
+};
+
+
+struct Connection {
+	FILE *file;
+	struct Database *db;
+};
+
+void flaw(const char *message)
+{
+	if(errno)
+	{
+		perror(message);
+	} else
+	{
+		printf("ERROR: %s\n", message);
+	}
+}
+
+void Database_load(struct Connection *conn)
+{
+	int rc = fread(conn->db,sizeof(struct Database), 1, conn->file);
+	if(rc != 1) flaw("Failed to load database");
+}
+
+struct Connection *Database_open(const char *filename, char mode)
+{
+	struct Connection *conn = malloc(sizeof(struct Connection));
+	if(!conn) flaw("Memory error");
+
+	conn->db = malloc(sizeof(struct Database));
+	if(!conn->db) flaw("Memory error");
+
+	if(mode == 'c') 
+	{
+		conn->file = fopen(filename, "w"); // write
+	} else 
+	{
+		conn->file = fopen(filename, "r"); // read
+
+		if(conn->file)
+		{
+			Database_load(conn);
+		}
+	}
+
+	if(!conn->file) flaw("Failed to open the file");
+
+	return conn;
+}
+
+void Database_close(struct Connection *conn)
+{
+	if(conn)
+	{
+		if(conn->file) fclose(conn->file);
+		if(conn->db) free(conn->db);
+		free(conn);
+	}
+}
+
+
 
 int printMenu()
 {
@@ -60,6 +129,8 @@ void addDevice() {
 		fprintf(fp,"%s %s\n", (ptr+i)->serialNumber, (ptr+i)->model);
 	}
 	fclose(fp);
+	free(ptr);
+	
 	printf("Press any key to continue");
 	getchar();
 	getchar();
